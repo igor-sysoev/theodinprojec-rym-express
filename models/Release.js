@@ -7,7 +7,8 @@ var ReleaseSchema = new Schema({
   band: { type: Schema.ObjectId, ref: "Band" },
   artist: { type: Schema.ObjectId, ref: "Artist" },
   cover: { type: String, required: true },
-  genre: [{ type: Schema.ObjectId, ref: "Genre" }],
+  genre: { type: Schema.ObjectId, ref: "Genre" },
+  date: Date,
 });
 
 ReleaseSchema.virtual("url").get(function () {

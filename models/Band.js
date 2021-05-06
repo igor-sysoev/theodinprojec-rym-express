@@ -1,8 +1,9 @@
 var mongoose = require("mongoose");
 
-var Schema = mognoose.Schema;
+var Schema = mongoose.Schema;
 
 var BandSchema = new Schema({
+  name: { type: String, required: true },
   members: [{ type: Schema.ObjectId, ref: "Person" }],
   releases: [{ type: Schema.ObjectId, ref: "Release" }],
   founded: { type: Date },
