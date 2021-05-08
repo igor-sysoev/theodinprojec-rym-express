@@ -3,6 +3,12 @@ var Artist = require("../models/Artist");
 var Genre = require("../models/Genre");
 var Band = require("../models/Band");
 var async = require("async");
+const { body, validationResult } = require("express-validator");
+const helpers = {
+  isEqual: function (a, b) {
+    if (a && b) return a.toString() == b.toString();
+  },
+};
 
 exports.index = function (req, res, next) {
   async.parallel(
@@ -35,7 +41,6 @@ exports.list = function (req, res, next) {
       if (err) {
         return next(err);
       } else {
-        console.log(list);
         res.render("release_list", {
           title: "Releases",
           release_list: list,
@@ -81,22 +86,107 @@ exports.create_get = function (req, res, next) {
           title: "Create Release",
           artists: results.artists,
           bands: results.bands,
+          genres: results.genres,
+          helpers,
         });
       }
     }
   );
 };
 
-exports.create_post = function (req, res, next) {
-  res.send("Create release Post");
-};
+exports.create_post = [
+  (req, res, next) => {
+    async.parallel(
+      {
+        artist: function (callback) {
+          Artist.findById(req.body.creator).exec(callback);
+        },
+        band: function (callback) {
+          Band.findById(req.body.creator).exec(callback);
+        },
+      },
+      function (err, results) {
+        if (err) {
+          return next(err);
+        }
+        if (results.artist !== null) {
+          req.body.artist = results.artist;
+          delete req.body.creator;
+        } else if (results.creator !== null) {
+          req.body.band = results.band;
+          delete req.body.creator;
+        }
+        next();
+      }
+    );
+  },
+
+  // body("title", "Title must not be empty.")
+  //   .trim()
+  //   .isLength({ min: 1 })
+  //   .escape(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    let release = new Release(req.body);
+    if (!errors.isEmpty()) {
+      async.parallel(
+        {
+          bands: function (callback) {
+            Band.find({}).lean().exec(callback);
+          },
+          artists: function (callback) {
+            Artist.find({}).lean().exec(callback);
+          },
+          genres: function (callback) {
+            Genre.find({}).lean().exec(callback);
+          },
+        },
+        function (err, results) {
+          if (err) {
+            return next(err);
+          } else {
+            res.render("release_form", {
+              title: "Create Release",
+              artists: results.artists,
+              bands: results.bands,
+              genres: results.genres,
+              release: req.body,
+              helpers,
+            });
+          }
+        }
+      );
+      res.redirect("/catalog/releases");
+    } else {
+      release.save(function (err) {
+        if (err) {
+          return next(err);
+        }
+        res.redirect("/catalog/releases/" + release._id);
+      });
+    }
+  },
+];
 
 exports.delete_get = function (req, res, next) {
-  res.send("Delete release Form");
+  Release.findById(req.params.id)
+    .lean()
+    .exec(function (err, release) {
+      if (err) {
+        return next(err);
+      }
+      res.render("release_delete", { release });
+    });
 };
 
 exports.delete_post = function (req, res, next) {
-  res.send("Delete release Post");
+  Release.findByIdAndRemove(req.params.id).exec(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/catalog/releases");
+  });
 };
 
 exports.update_get = function (req, res, next) {
@@ -114,28 +204,104 @@ exports.update_get = function (req, res, next) {
           .populate("artist band genre")
           .exec(callback);
       },
+      genres: function (callback) {
+        Genre.find({}).lean().exec(callback);
+      },
     },
     function (err, results) {
       if (err) {
         return next(err);
       } else {
-        console.log(results.release);
         res.render("release_form", {
           title: "Create Release",
           artists: results.artists,
           bands: results.bands,
           release: results.release,
-          helpers: {
-            isEqual: function (a, b) {
-              if (a && b) return a.toString() == b.toString();
-            },
-          },
+          genres: results.genres,
+          helpers,
         });
       }
     }
   );
 };
 
-exports.update_post = function (res, res, next) {
-  res.send("Update release form");
-};
+exports.update_post = [
+  (req, res, next) => {
+    async.parallel(
+      {
+        artist: function (callback) {
+          Artist.findById(req.body.creator).exec(callback);
+        },
+        band: function (callback) {
+          Band.findById(req.body.creator).exec(callback);
+        },
+      },
+      function (err, results) {
+        if (err) {
+          return next(err);
+        }
+        if (results.artist !== null) {
+          req.body.artist = results.artist;
+          delete req.body.creator;
+        } else if (results.creator !== null) {
+          req.body.band = results.band;
+          delete req.body.creator;
+        }
+        next();
+      }
+    );
+  },
+  // body("title", "Title must not be empty.")
+  //   .trim()
+  //   .isLength({ min: 1 })
+  //   .escape(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    console.log(req.body);
+    let release = new Release({ ...req.body, _id: req.params.id });
+    console.log(release);
+    if (!errors.isEmpty()) {
+      async.parallel(
+        {
+          bands: function (callback) {
+            Band.find({}).lean().exec(callback);
+          },
+          artists: function (callback) {
+            Artist.find({}).lean().exec(callback);
+          },
+          genres: function (callback) {
+            Genre.find({}).lean().exec(callback);
+          },
+        },
+        function (err, results) {
+          if (err) {
+            return next(err);
+          } else {
+            res.render("release_form", {
+              title: "Update Release",
+              artists: results.artists,
+              bands: results.bands,
+              genres: results.genres,
+              release: req.body,
+              helpers,
+            });
+          }
+        }
+      );
+      res.redirect("/catalog/releases");
+    } else {
+      Release.findByIdAndUpdate(
+        req.params.id,
+        release,
+        {},
+        function (err, newRelease) {
+          if (err) {
+            return next(err);
+          }
+          res.redirect("/catalog/releases/" + newRelease.id);
+        }
+      );
+    }
+  },
+];

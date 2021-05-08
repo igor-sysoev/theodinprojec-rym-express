@@ -1,11 +1,25 @@
 var Band = require("../models/Band");
 
 exports.list = function (req, res, next) {
-  res.send("NOT IMPLEMENTED: Band list");
+  Band.find({})
+    .lean()
+    .exec(function (err, band_list) {
+      if (err) {
+        return next(err);
+      }
+      res.render("band_list", { band_list });
+    });
 };
 
 exports.detail = function (req, res, next) {
-  res.send("band detail: " + req.params.id);
+  Band.findById(req.params.id)
+    .lean()
+    .exec(function (err, band) {
+      if (err) {
+        return next(err);
+      }
+      res.render("band_detail", { band });
+    });
 };
 // crud
 exports.create_get = function (req, res, next) {

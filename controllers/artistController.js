@@ -1,11 +1,25 @@
 var Artist = require("../models/Artist");
 
 exports.list = function (req, res, next) {
-  res.send("NOT IMPLEMENTED: Artist list");
+  Artist.find({})
+    .lean()
+    .exec(function (err, artist_list) {
+      if (err) {
+        return next(err);
+      }
+      res.render("artist_list", { artist_list });
+    });
 };
 
 exports.detail = function (req, res, next) {
-  res.send("Arist detail: " + req.params.id);
+  Artist.findById(req.params.id)
+    .lean()
+    .exec(function (err, artist) {
+      if (err) {
+        return next(err);
+      }
+      res.render("artist_detail", { artist });
+    });
 };
 // crud
 exports.create_get = function (req, res, next) {

@@ -6,20 +6,33 @@
         <label for="cover" class="mt-2">Cover</label>
         <input type="text" name="cover" class="form-control" required="true" value="{{#if release}} {{release.cover}} {{else}} {{/if}}" />
     </div>
-        <div class="form-group">
-        <label for="creator">By</label>
-        <select class="form-control" required="true" value="{{#if release.band}}{{release.band._id}}{{else}}{{release.artist._id}}{{/if}}">
-            {{#each bands name="band"}}
-            <option value="{{_id}}" {{#if (isEqual _id ../release.band._id)}} selected {{else}} poop {{/if}}>
+    <div class="form-group">
+        <label for="artist band">By</label>
+        <select class="form-control" required="true" name='creator' value="{{#if release.band}}{{release.band._id}}{{else}}{{release.artist._id}}{{/if}}">
+            {{#each bands}}
+            <option name="band" value="{{_id}}" {{#if (isEqual _id ../release.band._id)}} selected {{/if}}>
                  {{name}}
             </option>
             {{/each}}
             {{#each artists}}
-              <option value="{{_id}}" name="artist" {{#if (isEqual _id ../release.artist._id)}} selected {{else}} poop {{/if}}>
+              <option value="{{_id}}" name="artist" {{#if (isEqual _id ../release.artist._id)}} selected {{/if}}>
                 {{name}}
             </option>
             {{/each}}
         </select>
+    </div>
+    <div class="form-group">
+        <label for='genre'>Genre</label>
+        <select class="form-control" name="genre" required="true" value='{{#if release.genre._id}}{{release.genre._id}}{{else}}{{''}}{{/if}}'>
+            {{#each genres}}
+                <option  value="{{_id}}" {{#if (isEqual _id ../release.genre._id)}} selected {{/if}}>
+                    {{name}}
+                </option>
+            {{/each}}
+        </select>
+    </div>
+    <div class="form-group">
+       <button class="btn btn-primary" type="submit">Submit</button>
     </div>
 </form>
 </div>

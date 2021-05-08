@@ -13,7 +13,14 @@ exports.list = function (req, res, next) {
 };
 
 exports.detail = function (req, res, next) {
-  res.send("genre detail: " + req.params.id);
+  Genre.findById(req.params.id)
+    .lean()
+    .exec(function (err, genre) {
+      if (err) {
+        return next(err);
+      }
+      res.render("genre_detail", { genre });
+    });
 };
 // crud
 exports.create_get = function (req, res, next) {
