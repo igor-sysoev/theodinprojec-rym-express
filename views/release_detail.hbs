@@ -1,0 +1,18 @@
+<div class="container ">
+    <div class="row ">
+        <div class="col-sm text-center ">
+                <img src="{{release.cover}}"style="width:500px;"/>
+                <h4 class="text-center">{{release.title}}</h4>
+                {{#if release.band}}
+                    <p class="text-center">{{release.band.name}}</p>
+                {{else}}
+                    <p class="text-center">{{release.artist.name}}</p>
+                {{/if}}
+                <p class="text-center">{{release.genre.name}}</p>
+        </div>
+    </div>
+    <div class="row justify-content-sm-center">
+        <div class="col-sm-2"><a href="/catalog/releases/{{release._id}}/update" class="btn btn-primary">Update Release</a></div>
+        <div class="col-sm-2"><a href="/catalog/releases/{{release._id}}/delete" class="btn btn-primary">Delete Release</a></div>
+    </div>
+</div>

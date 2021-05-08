@@ -1,0 +1,25 @@
+<div class="container">
+    <form method="POST" action="" >
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text"  name="title" class="form-control" required="true" value="{{#if release}} {{release.title}} {{else}} {{/if}}" />
+        <label for="cover" class="mt-2">Cover</label>
+        <input type="text" name="cover" class="form-control" required="true" value="{{#if release}} {{release.cover}} {{else}} {{/if}}" />
+    </div>
+        <div class="form-group">
+        <label for="creator">By</label>
+        <select class="form-control" required="true" value="{{#if release.band}}{{release.band._id}}{{else}}{{release.artist._id}}{{/if}}">
+            {{#each bands name="band"}}
+            <option value="{{_id}}" {{#if (isEqual _id ../release.band._id)}} selected {{else}} poop {{/if}}>
+                 {{name}}
+            </option>
+            {{/each}}
+            {{#each artists}}
+              <option value="{{_id}}" name="artist" {{#if (isEqual _id ../release.artist._id)}} selected {{else}} poop {{/if}}>
+                {{name}}
+            </option>
+            {{/each}}
+        </select>
+    </div>
+</form>
+</div>

@@ -1,4 +1,16 @@
-
+<div class="container">
     {{#each release_list}}
-        <a>{{title}}</a>
+        <div className="row">
+            <a href="/catalog/releases/{{this._id}}">
+            {{this.title}} 
+            </a>
+
+            {{#if this.band}}
+            <span>by {{this.band.name}}</span>
+            {{else}}
+            <span>by {{this.artist.name}}</span>
+            {{/if}}
+            <img src="{{this.cover}}" style="width:50px;"/>
+        </div>
     {{/each}}
+</div>    

@@ -4,6 +4,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var hbs = require("express-handlebars");
+var Handlebars = require("hbs");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var catalogRouter = require("./routes/catalog");
@@ -29,9 +30,12 @@ app.engine(
     extname: "hbs",
     defaultView: "default",
     layoutsDir: __dirname + "/views/layouts/",
-    partialsDir: __dirname + "/views/partials/",
   })
 );
+
+Handlebars.registerHelper("isEqual", function (expectedValue, value) {
+  return value === expectedValue;
+});
 
 // hbs.registerPartials(__dirname + "/views/partials");
 app.use(logger("dev"));

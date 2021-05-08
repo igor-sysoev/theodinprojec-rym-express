@@ -29,6 +29,7 @@ exports.index = function (req, res, next) {
 
 exports.list = function (req, res, next) {
   Release.find({}, "title band artist date cover")
+    .lean()
     .populate("band artist")
     .exec(function (err, list) {
       if (err) {
@@ -36,7 +37,7 @@ exports.list = function (req, res, next) {
       } else {
         console.log(list);
         res.render("release_list", {
-          title: "boobo",
+          title: "Releases",
           release_list: list,
         });
       }
@@ -44,11 +45,46 @@ exports.list = function (req, res, next) {
 };
 
 exports.detail = function (req, res, next) {
-  Release.findById(req.params.id).populate("band artist");
+  Release.findById(req.params.id)
+    .lean()
+    .populate("band artist genre")
+    .exec(function (err, release) {
+      if (err) {
+        return next(err);
+      } else {
+        res.render("release_detail", {
+          title: "Release",
+          release,
+        });
+      }
+    });
 };
 // crud
 exports.create_get = function (req, res, next) {
-  res.send("release bandform");
+  async.parallel(
+    {
+      bands: function (callback) {
+        Band.find({}).lean().exec(callback);
+      },
+      artists: function (callback) {
+        Artist.find({}).lean().exec(callback);
+      },
+      genres: function (callback) {
+        Genre.find({}).lean().exec(callback);
+      },
+    },
+    function (err, results) {
+      if (err) {
+        return next(err);
+      } else {
+        res.render("release_form", {
+          title: "Create Release",
+          artists: results.artists,
+          bands: results.bands,
+        });
+      }
+    }
+  );
 };
 
 exports.create_post = function (req, res, next) {
@@ -64,7 +100,40 @@ exports.delete_post = function (req, res, next) {
 };
 
 exports.update_get = function (req, res, next) {
-  res.send("Update release form");
+  async.parallel(
+    {
+      bands: function (callback) {
+        Band.find({}).lean().exec(callback);
+      },
+      artists: function (callback) {
+        Artist.find({}).lean().exec(callback);
+      },
+      release: function (callback) {
+        Release.findById(req.params.id)
+          .lean()
+          .populate("artist band genre")
+          .exec(callback);
+      },
+    },
+    function (err, results) {
+      if (err) {
+        return next(err);
+      } else {
+        console.log(results.release);
+        res.render("release_form", {
+          title: "Create Release",
+          artists: results.artists,
+          bands: results.bands,
+          release: results.release,
+          helpers: {
+            isEqual: function (a, b) {
+              if (a && b) return a.toString() == b.toString();
+            },
+          },
+        });
+      }
+    }
+  );
 };
 
 exports.update_post = function (res, res, next) {

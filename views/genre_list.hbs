@@ -1,0 +1,10 @@
+<div class="container">
+    {{#each genre_list}}
+        <div className="row">
+            <a href="/catalog/genres/{{this._id}}">
+            {{this.name}} 
+            </a>
+
+        </div>
+    {{/each}}
+</div>    
