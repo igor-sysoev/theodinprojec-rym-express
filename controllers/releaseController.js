@@ -3,12 +3,9 @@ var Artist = require("../models/Artist");
 var Genre = require("../models/Genre");
 var Band = require("../models/Band");
 var async = require("async");
+var helpers = require("./helpers");
+
 const { body, validationResult } = require("express-validator");
-const helpers = {
-  isEqual: function (a, b) {
-    if (a && b) return a.toString() == b.toString();
-  },
-};
 
 exports.index = function (req, res, next) {
   async.parallel(
@@ -176,7 +173,7 @@ exports.delete_get = function (req, res, next) {
       if (err) {
         return next(err);
       }
-      res.render("release_delete", { release });
+      res.render("delete", { item: release });
     });
 };
 
@@ -258,9 +255,7 @@ exports.update_post = [
 
   (req, res, next) => {
     const errors = validationResult(req);
-    console.log(req.body);
     let release = new Release({ ...req.body, _id: req.params.id });
-    console.log(release);
     if (!errors.isEmpty()) {
       async.parallel(
         {

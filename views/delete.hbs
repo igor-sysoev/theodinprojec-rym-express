@@ -1,9 +1,9 @@
 <div class="content">
-    <h3>Are you sure you want to delete {{release.title}} </h3>
+    <h3>Are you sure you want to delete {{item.title}} {{item.name}}  </h3>
 
     <form method="POST" action="">
         <div class="form-group">
-            <input type="hidden" name="id" required="true" value="{{release._id}}"/>
+            <input type="hidden" name="id" required="true" value="{{item._id}}"/>
             <button class="btn-primary" type="submit">Delete</button>
         </div>
     </form>

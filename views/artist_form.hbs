@@ -1,0 +1,26 @@
+<div class="container">
+    <form method="POST" action="" >
+    <div class="form-group">
+        <label for="name">Name</label> 
+        <input type="text"  name="name" class="form-control" required="true" value="{{#if artist}} {{artist.name}} {{else}} {{/if}}" />
+    </div>
+    <div class="form-group">
+        <label for="artist band">Member of</label>
+        <select class="form-control"  name='member_of' value="{{#if artist.member_of}}{{artist.member_of._id}}{{else}}{{/if}}">
+            {{#each bands}}
+            <option name="band" value="{{_id}}" {{#if (isEqual _id ../artist.band._id)}} selected {{/if}}>
+                 {{name}}
+            </option>
+            {{/each}}
+            <option value="">
+                None
+            </option>
+        </select>
+    </div>
+     
+
+    <div class="form-group">
+       <button class="btn btn-primary" type="submit">Submit</button>
+    </div>
+</form>
+</div>

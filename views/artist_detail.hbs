@@ -2,8 +2,18 @@
     <div class="row ">
         <div class="col-sm text-center ">
 
-                <h4 class="text-center">{{artist.name}}</h4>
-              
+                <h4 >{{artist.name}}</h4>
+                {{#if artist.member_of.name}}
+                <p>Member of {{artist.member_of.name}}</p>
+                {{/if}}
+                {{#if releases}}
+                <h2>Releases</h2>
+                <ul class="list-unstyled">
+                    {{#each releases}}
+                    <li>{{title}}</li>
+                    {{/each}}
+                </ul>
+                {{/if}}
         </div>
     </div>
     <div class="row justify-content-sm-center">

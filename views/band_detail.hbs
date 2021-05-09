@@ -3,6 +3,22 @@
         <div class="col-sm text-center ">
 
                 <h4 class="text-center">{{band.name}}</h4>
+                {{#if band.members}}
+                  <p>Members
+                        {{#each band_members}}
+                        <span>{{name}}</span>
+                        {{/each}}
+                    </p>
+                {{/if}}
+
+                {{#if releases}}
+                    <h2>Releases</h2>
+                    <ul class="list-unstyled">
+                        {{#each releases}}
+                        <li>{{title}}</li>
+                        {{/each}}
+                    </ul>
+                {{/if}}
               
         </div>
     </div>
