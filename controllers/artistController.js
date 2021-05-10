@@ -60,6 +60,14 @@ exports.create_get = function (req, res, next) {
 
 exports.create_post = [
   (req, res, next) => {
+    if (req.body.member_of === "None") {
+      req.body.member_of = null;
+    }
+
+    next();
+  },
+
+  (req, res, next) => {
     const errors = validationResult(req);
     let artist = new Artist(req.body);
     if (!errors.isEmpty()) {
@@ -123,6 +131,14 @@ exports.update_get = function (req, res, next) {
 };
 
 exports.update_post = [
+  (req, res, next) => {
+    if (req.body.member_of === "None") {
+      req.body.member_of = null;
+    }
+
+    next();
+  },
+
   (req, res, next) => {
     const errors = validationResult(req);
     let artist = new Artist({ ...req.body, _id: req.params.id });

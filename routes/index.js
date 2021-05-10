@@ -6,4 +6,8 @@ router.get("/", function (req, res, next) {
   res.redirect("/catalog");
 });
 
+router.post("/upload", function (req, res, next) {
+  res.send("Hi !");
+});
+
 module.exports = router;

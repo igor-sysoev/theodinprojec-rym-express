@@ -1,10 +1,21 @@
 <div class="container">
-    <form method="POST" action="" >
+    <div class="text-center w-100">
+        <img src='/images/{{release.cover}}' style="width:200px;" />
+    </div>
+    <form method="POST" action="" enctype="multipart/form-data">
+             
     <div class="form-group">
         <label for="title">Title</label>
         <input type="text"  name="title" class="form-control" required="true" value="{{#if release}} {{release.title}} {{else}} {{/if}}" />
-        <label for="cover" class="mt-2">Cover</label>
-        <input type="text" name="cover" class="form-control" required="true" value="{{#if release}} {{release.cover}} {{else}} {{/if}}" />
+        {{#if release.cover}}
+
+        <label for="cover" class="mt-2">Change Cover</label>
+       
+        {{else}}
+        <label for="cover" class="mt-2">Add Cover</label>
+        {{/if}}
+
+        <input type="file" name="cover" class="form-control"value="{{#if release.cover}}{{'/images/{{release.cover}}'}}{{else}}{{/if}}" />
     </div>
     <div class="form-group">
         <label for="artist band">By</label>
@@ -31,13 +42,30 @@
             {{/each}}
         </select>
     </div>
+    <div class="rating">
+        <label>Rating</label>
+        <input type='hidden' class='rating_input' value="{{#if release.rating}}{{release.rating}}{{else}}{{'1'}}{{/if}}" name="rating" />
+         <i class="rating__star far fa-star"></i>
+         <i class="rating__star far fa-star"></i>
+         <i class="rating__star far fa-star"></i>
+         <i class="rating__star far fa-star"></i>
+         <i class="rating__star far fa-star"></i>
+   </div>
+
     <div class="form-group d-flex flex-column">
         <label for="description">Description</label>
         <textarea name="description" id="" cols="30" rows="3" style="resize:none;" class="formcontrol">{{#if release.description}}{{release.description}}{{else}}{{' '}}{{/if}}</textarea>
     </div>
-
+  
     <div class="form-group">
        <button class="btn btn-primary" type="submit">Submit</button>
     </div>
+    <div class="form-group">
+
+    </div>
 </form>
 </div>
+
+<script src="/javascripts/stars.js">
+    
+</script>

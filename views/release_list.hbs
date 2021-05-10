@@ -1,16 +1,27 @@
 <div class="container">
-    {{#each list}}
-        <div className="row">
-            <a href="/catalog/releases/{{this._id}}">
-            {{this.title}} 
-            </a>
+  {{#each list}}
+    <div className="row">
+      <a href="/catalog/releases/{{this._id}}">
+        {{this.title}}
+      </a>
 
-            {{#if this.band}}
-            <span>by <a href="/catalog/bands/{{this.band._id}}">{{this.band.name}}</a></span>
-            {{else}}
-            <span>by <a href="/catalog/artists/{{this.artist._id}}">{{this.artist.name}}</a></span>
-            {{/if}}
-            <img src="{{this.cover}}" style="width:50px;"/>
-        </div>
-    {{/each}}
-</div>    
+      {{#if this.band}}
+        <span>by
+          <a
+            href="/catalog/bands/{{this.band._id}}"
+          >{{this.band.name}}</a></span>
+      {{else}}
+        <span>by
+          <a
+            href="/catalog/artists/{{this.artist._id}}"
+          >{{this.artist.name}}</a></span>
+      {{/if}}
+      <img src="/images/{{this.cover}}" style="width:50px;" />
+      <div class="rating">
+        <span id="secret_rating" style="display:none;">{{this.rating}}</span>
+      </div>
+    </div>
+  {{/each}}
+</div>
+
+<script src="/javascripts/stars.js"></script>

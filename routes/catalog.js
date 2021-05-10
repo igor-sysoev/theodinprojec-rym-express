@@ -37,7 +37,13 @@ routeArr.forEach(function (path) {
   router.post(`/${path.key}/:id/update`, path.controller.update_post);
 
   router.get(`/${path.key}/:id/delete`, path.controller.delete_get);
-  router.post(`/${path.key}/:id/delete`, path.controller.delete_post);
+  router.post(`/${path.key}/:id/delete`, (req, res, next) => {
+    if (req.body.password === "password") {
+      path.controller.delete_post(req, res, next);
+    } else {
+      res.render("wrong_password", { path: path.key });
+    }
+  });
 });
 
 router.get("/", release_controller.index);

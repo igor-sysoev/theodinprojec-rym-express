@@ -1,8 +1,14 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+.rating {
+  width: 180px;
 }
 
-a {
-  color: #00b7ff;
+.rating__star {
+  cursor: pointer;
+  color: #dabd18b2;
+  outline: none;
+  user-select: none;
+}
+
+.rating_star_filled svg {
+  fill: #dabd18b2;
 }

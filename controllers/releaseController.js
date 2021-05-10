@@ -4,8 +4,30 @@ var Genre = require("../models/Genre");
 var Band = require("../models/Band");
 var async = require("async");
 var helpers = require("./helpers");
+const multer = require("multer");
 
 const { body, validationResult } = require("express-validator");
+
+const storage = multer.diskStorage({
+  destination: function (request, file, callback) {
+    callback(null, "./public/images");
+  },
+
+  // add back the extensions
+
+  filename: function (request, file, callback) {
+    callback(null, Date.now() + file.originalname);
+  },
+});
+
+// upload params for multer
+
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: "8 MB",
+  },
+});
 
 exports.index = function (req, res, next) {
   async.parallel(
@@ -31,7 +53,7 @@ exports.index = function (req, res, next) {
 };
 
 exports.list = function (req, res, next) {
-  Release.find({}, "title band artist date cover")
+  Release.find({})
     .lean()
     .populate("band artist")
     .exec(function (err, list) {
@@ -93,7 +115,9 @@ exports.create_get = function (req, res, next) {
 };
 
 exports.create_post = [
+  upload.single("cover"),
   (req, res, next) => {
+    console.log(req.body, req.file);
     async.parallel(
       {
         artist: function (callback) {
@@ -125,8 +149,9 @@ exports.create_post = [
   //   .escape(),
 
   (req, res, next) => {
+    console.log(req.body);
     const errors = validationResult(req);
-    let release = new Release(req.body);
+    let release = new Release({ ...req.body, cover: req.file.filename });
     if (!errors.isEmpty()) {
       async.parallel(
         {
@@ -225,6 +250,17 @@ exports.update_get = function (req, res, next) {
 
 exports.update_post = [
   (req, res, next) => {
+    if (!req.body.cover) {
+      Release.findById(req.params.id).exec(function (err, release) {
+        req.file = {};
+        req.file.filename = release.cover;
+        upload.single("cover");
+      });
+    }
+    next();
+  },
+
+  (req, res, next) => {
     async.parallel(
       {
         artist: function (callback) {
@@ -256,7 +292,11 @@ exports.update_post = [
 
   (req, res, next) => {
     const errors = validationResult(req);
-    let release = new Release({ ...req.body, _id: req.params.id });
+    let release = new Release({
+      ...req.body,
+      _id: req.params.id,
+      cover: req.file.filename,
+    });
     if (!errors.isEmpty()) {
       async.parallel(
         {
