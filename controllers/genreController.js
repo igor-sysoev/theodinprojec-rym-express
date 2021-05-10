@@ -1,6 +1,7 @@
 var Genre = require("../models/Genre");
+var Release = require("../models/Release");
 var helpers = require("./helpers");
-
+var async = require("async");
 exports.list = function (req, res, next) {
   Genre.find({})
     .lean()
@@ -9,19 +10,30 @@ exports.list = function (req, res, next) {
         return next(err);
       }
 
-      res.render("genre_list", { genre_list });
+      res.render("genre_list", { list: genre_list, genrePage: true });
     });
 };
 
 exports.detail = function (req, res, next) {
-  Genre.findById(req.params.id)
-    .lean()
-    .exec(function (err, genre) {
+  async.parallel(
+    {
+      genre: function (callback) {
+        Genre.findById(req.params.id).lean().exec(callback);
+      },
+      releases: function (callback) {
+        Release.find({ genre: req.params.id }).lean().exec(callback);
+      },
+    },
+    function (err, results) {
       if (err) {
         return next(err);
       }
-      res.render("genre_detail", { genre });
-    });
+      res.render("genre_detail", {
+        genre: results.genre,
+        releases: results.releases,
+      });
+    }
+  );
 };
 // crud
 exports.create_get = function (req, res, next) {

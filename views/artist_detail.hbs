@@ -4,13 +4,14 @@
 
                 <h4 >{{artist.name}}</h4>
                 {{#if artist.member_of.name}}
-                <p>Member of {{artist.member_of.name}}</p>
+                <p>Member of <a href="/catalog/bands/{{artist.member_of._id}}">{{artist.member_of.name}}</a></p>
                 {{/if}}
+                <p>{{artist.description}}</p>
                 {{#if releases}}
                 <h2>Releases</h2>
                 <ul class="list-unstyled">
                     {{#each releases}}
-                    <li>{{title}}</li>
+                    <li><a href="/catalog/releases/{{_id}}">{{title}}</a></li>
                     {{/each}}
                 </ul>
                 {{/if}}

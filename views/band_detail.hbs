@@ -3,19 +3,19 @@
         <div class="col-sm text-center ">
 
                 <h4 class="text-center">{{band.name}}</h4>
-                {{#if band.members}}
-                  <p>Members
+                {{#if band_members}}
+    
                         {{#each band_members}}
-                        <span>{{name}}</span>
+                        <a href="/catalog/artists/{{_id}}">{{name}}</a>
                         {{/each}}
-                    </p>
-                {{/if}}
 
+                {{/if}}
+                <p>{{band.description}}</p>
                 {{#if releases}}
                     <h2>Releases</h2>
                     <ul class="list-unstyled">
                         {{#each releases}}
-                        <li>{{title}}</li>
+                        <li><a href="/catalog/releases/{{_id}}">{{title}}</a></li>
                         {{/each}}
                     </ul>
                 {{/if}}

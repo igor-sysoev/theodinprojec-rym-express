@@ -3,7 +3,15 @@
         <div class="col-sm text-center ">
 
                 <h4 class="text-center">{{genre.name}}</h4>
-              
+                <p>{{genre.description}}</p>
+                   {{#if releases}}
+                    <h2>Releases</h2>
+                    <ul class="list-unstyled">
+                        {{#each releases}}
+                        <li><a href="/catalog/releases/{{_id}}">{{title}}</a></li>
+                        {{/each}}
+                    </ul>
+                {{/if}}
         </div>
     </div>
     <div class="row justify-content-sm-center">

@@ -5,8 +5,7 @@ var Schema = mongoose.Schema;
 var BandSchema = new Schema({
   name: { type: String, required: true },
   releases: [{ type: Schema.ObjectId, ref: "Release" }],
-  founded: { type: Date },
-  disbanded: { type: Date },
+  description: String,
 });
 
 BandSchema.virtual("url").get(function () {

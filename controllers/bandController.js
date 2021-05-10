@@ -13,7 +13,7 @@ exports.list = function (req, res, next) {
       if (err) {
         return next(err);
       }
-      res.render("band_list", { band_list });
+      res.render("band_list", { list: band_list, bandPage: true });
     });
 };
 

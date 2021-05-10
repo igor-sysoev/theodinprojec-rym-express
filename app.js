@@ -9,6 +9,10 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var catalogRouter = require("./routes/catalog");
 
+var fs = require("fs");
+var path = require("path");
+var multer = require("multer");
+
 var app = express();
 
 var mongoose = require("mongoose");
@@ -36,6 +40,17 @@ app.engine(
 Handlebars.registerHelper("isEqual", function (expectedValue, value) {
   return value === expectedValue;
 });
+
+var storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + "-" + Date.now());
+  },
+});
+
+var upload = multer({ storage: storage });
 
 // hbs.registerPartials(__dirname + "/views/partials");
 app.use(logger("dev"));

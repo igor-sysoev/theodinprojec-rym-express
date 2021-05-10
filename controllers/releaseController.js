@@ -40,7 +40,8 @@ exports.list = function (req, res, next) {
       } else {
         res.render("release_list", {
           title: "Releases",
-          release_list: list,
+          list,
+          releasePage: true,
         });
       }
     });

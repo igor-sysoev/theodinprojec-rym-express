@@ -13,7 +13,7 @@ exports.list = function (req, res, next) {
       if (err) {
         return next(err);
       }
-      res.render("artist_list", { artist_list });
+      res.render("artist_list", { list: artist_list, artistPage: true });
     });
 };
 

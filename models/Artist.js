@@ -5,6 +5,8 @@ var Schema = mongoose.Schema;
 var ArtistSchema = new Schema({
   name: { type: String, required: true, maxLength: 100 },
   member_of: { type: Schema.ObjectId, ref: "Band" },
+  photo: String,
+  description: String,
 });
 
 ArtistSchema.virtual("url").get(function () {

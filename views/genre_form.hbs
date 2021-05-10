@@ -4,6 +4,10 @@
         <label for="name">Name</label> 
         <input type="text"  name="name" class="form-control" required="true" value="{{#if genre}} {{genre.name}} {{else}} {{/if}}" />
     </div>
+    <div class="form-group d-flex flex-column">
+        <label for="description">Description</label>
+        <textarea name="description" id="" cols="30" rows="3" style="resize:none;" class="formcontrol">{{#if genre.description}}{{genre.description}}{{else}}{{' '}}{{/if}}</textarea>
+    </div>
     <div class="form-group">
        <button class="btn btn-primary" type="submit">Submit</button>
     </div>

@@ -8,6 +8,8 @@ var ReleaseSchema = new Schema({
   artist: { type: Schema.ObjectId, ref: "Artist" },
   cover: { type: String, required: true },
   genre: { type: Schema.ObjectId, ref: "Genre" },
+  rating: String,
+  description: String,
   date: Date,
 });
 
