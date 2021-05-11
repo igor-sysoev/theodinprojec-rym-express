@@ -115,9 +115,13 @@ exports.create_get = function (req, res, next) {
 };
 
 exports.create_post = [
+  body("title", "Release title must contain at least 1 character")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("description").trim().escape(),
   upload.single("cover"),
   (req, res, next) => {
-    console.log(req.body, req.file);
     async.parallel(
       {
         artist: function (callback) {
@@ -151,7 +155,7 @@ exports.create_post = [
   (req, res, next) => {
     console.log(req.body);
     const errors = validationResult(req);
-    let release = new Release({ ...req.body, cover: req.file.filename });
+    let release = new Release({ ...req.body, cover: req?.file?.filename });
     if (!errors.isEmpty()) {
       async.parallel(
         {
@@ -176,11 +180,11 @@ exports.create_post = [
               genres: results.genres,
               release: req.body,
               helpers,
+              errors: errors.array(),
             });
           }
         }
       );
-      res.redirect("/catalog/releases");
     } else {
       release.save(function (err) {
         if (err) {
@@ -249,6 +253,11 @@ exports.update_get = function (req, res, next) {
 };
 
 exports.update_post = [
+  body("title", "Release title must contain at least 1 character")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("description").trim().escape(),
   (req, res, next) => {
     if (!req.body.cover) {
       Release.findById(req.params.id).exec(function (err, release) {
@@ -295,7 +304,7 @@ exports.update_post = [
     let release = new Release({
       ...req.body,
       _id: req.params.id,
-      cover: req.file.filename,
+      cover: req?.file?.filename,
     });
     if (!errors.isEmpty()) {
       async.parallel(
@@ -321,6 +330,7 @@ exports.update_post = [
               genres: results.genres,
               release: req.body,
               helpers,
+              errors: errors.array(),
             });
           }
         }

@@ -49,12 +49,16 @@ exports.create_get = function (req, res, next) {
 };
 
 exports.create_post = [
+  body("name", "Band name must contain at least 1 character")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("description").trim().escape(),
   (req, res, next) => {
     const errors = validationResult(req);
     let band = new Band(req.body);
     if (!errors.isEmpty()) {
-      if (err) return next(err);
-      res.render("band_form", { band: req.body });
+      res.render("band_form", { band: req.body, errors: errors.array() });
     } else {
       band.save(function (err) {
         if (err) {
@@ -108,12 +112,16 @@ exports.update_get = function (req, res, next) {
 };
 
 exports.update_post = [
+  body("name", "Band name must contain at least 1 character")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("description").trim().escape(),
   (req, res, next) => {
     const errors = validationResult(req);
     let band = new Band({ ...req.body, _id: req.params.id });
     if (!errors.isEmpty()) {
-      if (err) return next(err);
-      res.render("band_form", { band: req.body });
+      res.render("band_form", { band: req.body, errors: errors.array() });
     } else {
       Band.findByIdAndUpdate(req.params.id, band, {}, function (err) {
         if (err) {

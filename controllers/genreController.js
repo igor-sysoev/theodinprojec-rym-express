@@ -2,6 +2,9 @@ var Genre = require("../models/Genre");
 var Release = require("../models/Release");
 var helpers = require("./helpers");
 var async = require("async");
+
+const { body, validationResult } = require("express-validator");
+
 exports.list = function (req, res, next) {
   Genre.find({})
     .lean()
@@ -41,7 +44,22 @@ exports.create_get = function (req, res, next) {
 };
 
 exports.create_post = [
+  body("name", "Genre name must contain at least 3 characters")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+  body("description").trim().escape(),
   (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      console.log(errors.array());
+      res.render("genre_form", {
+        title: "Update Genre",
+        genre: genre,
+        errors: errors.array(),
+      });
+    }
     var genre = new Genre(req.body);
 
     genre.save(function (err) {
@@ -96,14 +114,28 @@ exports.update_get = function (req, res, next) {
 };
 
 exports.update_post = [
+  body("name", "Genre name must contain at least 3 characters")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
   (req, res, next) => {
+    const errors = validationResult(req);
     var genre = new Genre({ ...req.body, _id: req.params.id });
-
-    Genre.findByIdAndUpdate(req.params.id, genre, {}, function (err) {
-      if (err) {
-        return next(err);
-      }
-      res.redirect("/catalog/genres/" + genre._id);
-    });
+    if (!errors.isEmpty()) {
+      // There are errors. Render the form again with sanitized values/error messages.
+      res.render("genre_form", {
+        title: "Update Genre",
+        genre: genre,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      Genre.findByIdAndUpdate(req.params.id, genre, {}, function (err) {
+        if (err) {
+          return next(err);
+        }
+        res.redirect("/catalog/genres/" + genre._id);
+      });
+    }
   },
 ];

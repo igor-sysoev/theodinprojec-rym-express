@@ -59,6 +59,11 @@ exports.create_get = function (req, res, next) {
 };
 
 exports.create_post = [
+  body("name", "Artist name must contain at least 1 character")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("description").trim().escape(),
   (req, res, next) => {
     if (req.body.member_of === "None") {
       req.body.member_of = null;
@@ -75,7 +80,12 @@ exports.create_post = [
         .lean()
         .exec(function (err, bands) {
           if (err) return next(err);
-          res.render("artist_form", { artist: req.body, bands });
+          res.render("artist_form", {
+            artist: req.body,
+            bands,
+            errors: errors.array(),
+            helpers,
+          });
         });
     } else {
       artist.save(function (err) {
@@ -142,6 +152,11 @@ exports.update_get = function (req, res, next) {
 };
 
 exports.update_post = [
+  body("name", "Artist name must contain at least 1 character")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("description").trim().escape(),
   (req, res, next) => {
     if (req.body.member_of === "None") {
       req.body.member_of = null;
@@ -157,7 +172,12 @@ exports.update_post = [
         .lean()
         .exec(function (err, bands) {
           if (err) return next(err);
-          res.render("artist_form", { artist: req.body, bands });
+          res.render("artist_form", {
+            artist: req.body,
+            bands,
+            errors: errors.array(),
+            helpers,
+          });
         });
     } else {
       Artist.findByIdAndUpdate(req.params.id, artist, {}, function (err) {
