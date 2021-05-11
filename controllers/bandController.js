@@ -66,14 +66,25 @@ exports.create_post = [
   },
 ];
 exports.delete_get = function (req, res, next) {
-  Band.findById(req.params.id)
-    .lean()
-    .exec(function (err, band) {
+  async.parallel(
+    {
+      band: function (callback) {
+        Band.findById(req.params.id).lean().exec(callback);
+      },
+      releases: function (callback) {
+        Release.find({ band: req.params.id }).lean().exec(callback);
+      },
+    },
+    function (err, results) {
       if (err) {
         return next(err);
       }
-      res.render("delete", { item: band });
-    });
+      res.render("delete", {
+        item: results.band,
+        conflicting_items: results.releases,
+      });
+    }
+  );
 };
 
 exports.delete_post = function (req, res, next) {

@@ -54,14 +54,25 @@ exports.create_post = [
 ];
 
 exports.delete_get = function (req, res, next) {
-  Genre.findById(req.params.id)
-    .lean()
-    .exec(function (err, genre) {
+  async.parallel(
+    {
+      genre: function (callback) {
+        Genre.findById(req.params.id).lean().exec(callback);
+      },
+      releases: function (callback) {
+        Release.find({ genre: req.params.id }).lean().exec(callback);
+      },
+    },
+    function (err, results) {
       if (err) {
         return next(err);
       }
-      res.render("delete", { item: genre });
-    });
+      res.render("delete", {
+        item: results.genre,
+        conflicting_items: results.releases,
+      });
+    }
+  );
 };
 
 exports.delete_post = function (req, res, next) {

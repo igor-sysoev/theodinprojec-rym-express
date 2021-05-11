@@ -88,14 +88,25 @@ exports.create_post = [
   },
 ];
 exports.delete_get = function (req, res, next) {
-  Artist.findById(req.params.id)
-    .lean()
-    .exec(function (err, artist) {
+  async.parallel(
+    {
+      artist: function (callback) {
+        Artist.findById(req.params.id).lean().exec(callback);
+      },
+      releases: function (callback) {
+        Release.find({ artist: req.params.id }).lean().exec(callback);
+      },
+    },
+    function (err, results) {
       if (err) {
         return next(err);
       }
-      res.render("delete", { item: artist });
-    });
+      res.render("delete", {
+        item: results.artist,
+        conflicting_items: results.releases,
+      });
+    }
+  );
 };
 
 exports.delete_post = function (req, res, next) {
@@ -135,7 +146,6 @@ exports.update_post = [
     if (req.body.member_of === "None") {
       req.body.member_of = null;
     }
-
     next();
   },
 

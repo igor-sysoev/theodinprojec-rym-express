@@ -8,7 +8,7 @@ const initStarDisplay = (div) => {
   for (let i = 0; i < 5; i++) {
     const el = document.createElement("i");
 
-    el.classList.add("fa-star", i > rating ? "far" : "fas");
+    el.classList.add("fa-star", "rating_star", i > rating ? "far" : "fas");
     div.appendChild(el);
   }
 };

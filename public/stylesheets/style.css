@@ -3,7 +3,6 @@
 }
 
 .rating__star {
-  cursor: pointer;
   color: #dabd18b2;
   outline: none;
   user-select: none;
@@ -11,4 +10,8 @@
 
 .rating_star_filled svg {
   fill: #dabd18b2;
+}
+
+.pointer {
+  cursor: pointer;
 }

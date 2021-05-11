@@ -1,7 +1,9 @@
 <div class="container">
+    {{#if release}}
     <div class="text-center w-100">
         <img src='/images/{{release.cover}}' style="width:200px;" />
     </div>
+    {{/if}}
     <form method="POST" action="" enctype="multipart/form-data">
              
     <div class="form-group">
@@ -45,11 +47,11 @@
     <div class="rating">
         <label>Rating</label>
         <input type='hidden' class='rating_input' value="{{#if release.rating}}{{release.rating}}{{else}}{{'1'}}{{/if}}" name="rating" />
-         <i class="rating__star far fa-star"></i>
-         <i class="rating__star far fa-star"></i>
-         <i class="rating__star far fa-star"></i>
-         <i class="rating__star far fa-star"></i>
-         <i class="rating__star far fa-star"></i>
+         <i class="rating__star pointer far fa-star"></i>
+         <i class="rating__star pointer far fa-star"></i>
+         <i class="rating__star pointer far fa-star"></i>
+         <i class="rating__star pointer far fa-star"></i>
+         <i class="rating__star pointer far fa-star"></i>
    </div>
 
     <div class="form-group d-flex flex-column">
