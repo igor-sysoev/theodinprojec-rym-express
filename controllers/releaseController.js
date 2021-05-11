@@ -115,9 +115,9 @@ exports.create_get = function (req, res, next) {
 };
 
 exports.create_post = [
-  body("title", "Release title must contain at least 1 character")
+  body("title")
     .trim()
-    .isLength({ min: 1 })
+
     .escape(),
   body("description").trim().escape(),
   upload.single("cover"),
@@ -252,10 +252,7 @@ exports.update_get = function (req, res, next) {
 };
 
 exports.update_post = [
-  body("title", "Release title must contain at least 1 character")
-    .trim()
-    .isLength({ min: 1 })
-    .escape(),
+  body("title").trim().escape(),
   body("description").trim().escape(),
   (req, res, next) => {
     if (!req.body.cover) {
