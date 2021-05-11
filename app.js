@@ -21,6 +21,7 @@ app.use(helmet()); // proection stuff
 var mongoose = require("mongoose");
 var dev_db_url =
   "mongodb+srv://dbUser:kenny1441@cluster0.j4ipt.mongodb.net/rym?retryWrites=true&w=majority";
+
 var mongoDB = process.env.MONGODB_URI || dev_db_url;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = global.Promise;
