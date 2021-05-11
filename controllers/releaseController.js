@@ -153,7 +153,6 @@ exports.create_post = [
   //   .escape(),
 
   (req, res, next) => {
-    console.log(req.body);
     const errors = validationResult(req);
     let release = new Release({ ...req.body, cover: req?.file?.filename });
     if (!errors.isEmpty()) {

@@ -8,13 +8,16 @@ var Handlebars = require("hbs");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var catalogRouter = require("./routes/catalog");
-
+var compression = require("compression");
+var helmet = require("helmet");
 var fs = require("fs");
 var path = require("path");
 var multer = require("multer");
 
 var app = express();
 
+app.use(compression()); //Compress all routes
+app.use(helmet()); // proection stuff
 var mongoose = require("mongoose");
 var dev_db_url =
   "mongodb+srv://dbUser:kenny1441@cluster0.j4ipt.mongodb.net/rym?retryWrites=true&w=majority";
